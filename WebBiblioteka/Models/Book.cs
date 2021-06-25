@@ -20,6 +20,9 @@ namespace WebBiblioteka.Models
         public int NumOfPages { get; set; }
         [Display(Name = "Cover")]
         [MaxLength]
+        
+
+        //saving image in db, not on server
         public byte[] Picture { get; set; }
         [StringLength(20)]
         public string TypeOfFile { get; set; }
