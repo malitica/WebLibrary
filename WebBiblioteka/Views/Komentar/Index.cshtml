@@ -1,0 +1,48 @@
+﻿@model IEnumerable<WebBiblioteka.Models.Komentar>
+
+
+<div class="jumbotron">
+    <h1>Forum</h1>
+</div>
+@if (SignInManager.IsSignedIn(User) == true)
+{
+    <p>
+        <a asp-action="Create">New comment</a>
+    </p>
+}
+else
+{
+<p>
+   @*<span>You must be logged in to post a comment.</span>*@
+   <span>Please <a href="/Identity/Account/Login">Sign in</a> to post a comment</span>
+</p>
+}
+
+
+<table class="table table-bordered table-striped">
+
+    <tr>
+        <th>Author</th>
+        <th>Headline</th>
+        <th>Comment</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+<tr>
+    <td>@item.Autor</td>
+    <td>@item.Naslov</td>
+    <td>@item.SadrzajKomentara</td>
+    <td>
+        @if (UserManager.GetUserName(User) == item.Autor || UserManager.GetUserName(User) == "test4")
+        {
+            <span>
+                <a asp-action="Edit" asp-route-id="@item.KomentarId">Edit</a> |
+                <a asp-action="Delete" asp-route-id="@item.KomentarId">Delete</a> |
+            </span>
+        }
+        <a asp-action="Details" asp-route-id="@item.KomentarId">Details</a>
+    </td>
+</tr>
+       
+    }
+</table>

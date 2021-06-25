@@ -1,0 +1,43 @@
+﻿@model WebBiblioteka.Models.Komentar
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Komentar</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Autor)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Autor)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Naslov)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Naslov)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SadrzajKomentara)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SadrzajKomentara)
+        </dd>
+    </dl>
+</div>
+<div>
+    @if (UserManager.GetUserName(User) == Model.Autor || UserManager.GetUserName(User) == "test4")
+    {
+        <span>
+            <a asp-action="Edit" asp-route-id="@Model.KomentarId">Edit</a> |
+            <a asp-action="Delete" asp-route-id="@Model.KomentarId">Delete</a> |
+        </span>
+    }
+
+    <a asp-action="Index">Back to List</a>
+</div>

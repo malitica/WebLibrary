@@ -1,0 +1,35 @@
+﻿@model IEnumerable<WebBiblioteka.Models.Book>
+
+
+
+@foreach (Book bk in Model)
+{
+    @if (bk.IsApproved != false)
+    {
+        <div class="book">
+
+            <div class="img">
+                <div class="img-front">
+                    <img src="@($"/Book/ReadImg/{bk.BookId}")">
+                </div>
+                <div class="img-back">
+
+                </div>
+            </div>
+
+            <div class="detailss">
+                <h1><a asp-action="Details" asp-route-id="@(bk.BookId)">@($"{bk.Title}")</a></h1>
+
+            </div>
+
+
+        </div>
+    }
+}
+
+
+
+
+
+
+

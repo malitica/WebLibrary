@@ -1,0 +1,191 @@
+﻿@model PaginatedList<WebBiblioteka.Models.Book>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Welcome to my web library</h1>
+@if (SignInManager.IsSignedIn(User))
+{
+    <p><a asp-action="Create"> Add new book</a></p>
+}
+else
+{
+    <p>You must be logged in to add a new book</p>
+}
+
+@if (TempData["Success"] != null)
+{
+    <p class="alert alert-info">Thank you for adding a book. Your book has to be approved before it is shown in the list, so do not panic if it is not shown right away</p>
+}
+
+@if (TempData["SuccessEdit"] != null)
+{
+    <p class="alert alert-info">Thank you for editing a book. Your book has to be approved before it is shown in the list, so do not panic if it is not shown right away</p>
+}
+@{
+    var prevDisabled = !Model.PreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.NextPage ? "disabled" : "";
+}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="_TraziKnjige" data-ajax="true" data-ajax-update="#everything" data-ajax-complete="completed">
+                <div class="form-group">
+                    <label for="Text1">Looking for the specific book? Enter part of the title:</label>
+                    <input id="Text1" type="text" name="deoNaslova" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <input id="Submit1" type="submit" value="Search" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div id="everything">
+                @foreach (Book bk in Model)
+                {
+                    @if (bk.IsApproved != false)
+                    {
+                        <div class="book">
+
+                            <div class="img">
+                                <div class="img-front">
+                                    <img src="@($"Book/ReadImg/{bk.BookId}")">
+                                </div>
+                                <div class="img-back">
+
+                                </div>
+                            </div>
+                            <div class="detailss">
+                                <h1><a asp-action="Details" asp-route-id="@(bk.BookId)">@($"{bk.Title}")</a></h1>
+
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+
+        </div>
+
+    </div>
+   
+        <div class="row mt-2">
+            <div class="col-md-6">
+                <div class="toBeRemoved">
+                    <a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)" class="btn btn-secondary @prevDisabled prevNext"> Previous </a>
+                    <a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)" class="btn btn-secondary @nextDisabled prevNext"> Next </a>
+                </div>
+            </div>
+        </div>
+  
+        <div class="row mt-2">
+            <div class="col-md-6">
+                
+                <p><a asp-action="Index"> Go to home page</a></p>
+            </div>
+        </div>  
+</div>
+
+
+
+
+
+
+            @section Styles{
+                <style>
+
+
+                    div.book {
+                        width: 220px;
+                        height: 245px;
+                        border-radius: 5px;
+                        border: 1px solid red;
+                        padding: 7px;
+                        float: left;
+                        margin: 5px;
+                        position: relative;
+                        margin-bottom: 23px;
+                        margin-left: 23px;
+                    }
+
+                    .img, .details {
+                        transition: all 1.7s;
+                    }
+
+                    .img {
+                        position: absolute;
+                        z-index: 2;
+                        transform-origin: left;
+                        transform-style: preserve-3d;
+                    }
+
+                    .img-back {
+                        position: absolute;
+                        bottom: 5px;
+                        left: -1px;
+                        width: 200px;
+                        height: 230px;
+                        background-color: #fff;
+                        transform: rotateY(180deg);
+                        opacity: 0.7;
+                    }
+
+                    .img-front, .img-back {
+                        backface-visibility: hidden;
+                    }
+
+                    div.book img {
+                        width: 200px;
+                        height: 230px;
+                        margin-bottom: 5px;
+                    }
+
+                    .detailss {
+                        z-index: 1;
+                        position: absolute;
+                        top: 7px;
+                        left: 7px;
+                        width: 200px;
+                        height: 230px;
+                        background-color: #da4747;
+                    }
+
+                        .detailss h1 {
+                            word-break: normal;
+                            font-family: Verdana;
+                            font-size: 20px;
+                            text-transform: uppercase;
+                            color: #fff;
+                            margin: 0;
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%,-50%);
+                        }
+
+                    .book:hover .img {
+                        transform: rotateY(-130deg) translateZ(1px);
+                    }
+                </style>
+            }
+            @section Scripts{
+                @{
+                    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+                }
+                <script src="~/lib/jquery/dist/jquery.min.js"></script>
+                <script src="~/lib/jquery-ajax-unobtrusive/dist/jquery.unobtrusive-ajax.min.js"></script>
+            }
+
+            <script>
+                completed = function () {
+                    $(".toBeRemoved").remove();
+                   
+                };
+            </script>

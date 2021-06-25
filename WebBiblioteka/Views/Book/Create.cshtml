@@ -1,0 +1,84 @@
+﻿@model WebBiblioteka.Models.Book
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Book</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input type="file" name="SelectedPic" id="File1" onchange="DisplayImg()" />
+            </div>
+            <div class="form-group">
+                <img id="img1" src="" width="280" height="210" hidden="hidden" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NumOfPages" class="control-label">Number of pages</label>
+                <input asp-for="NumOfPages" class="form-control" />
+                <span asp-validation-for="NumOfPages" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="Author" class="control-label"></label>
+                <input asp-for="Author" class="form-control" />
+                <span asp-validation-for="Author" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BookDesc" class="control-label">Book description</label>
+                <textarea asp-for="BookDesc" class="form-control"></textarea>
+                <span asp-validation-for="BookDesc" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" onclick="return Validacija()" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        function DisplayImg() {
+            var File1 = document.getElementById("File1");
+            var img1 = document.getElementById("img1");
+            var fajl = File1.files[0];
+
+            if (fajl != null && fajl.type.match(/image.*/)) {
+                var reader = new FileReader();
+                reader.readAsDataURL(fajl);
+                reader.onload = function () {
+                    img1.hidden = "";
+                    img1.src = reader.result;
+                };
+            }
+            else {
+                img1.setAttribute("src", "");
+            }
+        }
+
+        function Validacija() {
+            var src = $("#img1").attr("src");
+            if (src == "") {
+                $("#p1").html("You did not select any image");
+                return false;
+            }
+            return true;
+        }
+    </script>
+}
